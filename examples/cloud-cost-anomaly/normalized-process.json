@@ -1,0 +1,359 @@
+{
+  "id": "d3a4e5f6-b2c1-4a8e-9f0d-1e2b3c4d5e6f",
+  "schema_version": "1.0.0",
+  "metadata": {
+    "name": "Cloud Cost Anomaly Detection and Remediation",
+    "version": "1.0.0",
+    "industry": "Financial Services (Insurance)",
+    "departments": [
+      "FinOps",
+      "Cloud Platform Engineering",
+      "Application Teams",
+      "Observability (Splunk/New Relic)",
+      "IT Service Management (ServiceNow)"
+    ],
+    "created_at": "2024-01-15T09:00:00Z",
+    "tags": {
+      "domain": "finops",
+      "complexity": "high",
+      "automation_readiness": "high"
+    }
+  },
+  "overview": {
+    "description": "Identifies and resolves unexpected increases in cloud spend across hybrid environments by correlating cost signals with infrastructure changes, utilisation metrics, and observability data to determine root cause, generate optimisation actions, and route approvals and execution through ITSM.",
+    "objectives": [
+      "Detect cloud cost anomalies within 15 minutes of occurrence",
+      "Automate root cause analysis across multiple data sources",
+      "Route remediation actions to appropriate owners via ITSM",
+      "Validate that executed actions achieve expected cost savings",
+      "Establish a closed-loop detect-analyse-act-validate cycle"
+    ],
+    "triggers": [
+      "Cost anomaly detected via AWS Cost Explorer threshold breach",
+      "Observability alert from Splunk or New Relic indicating unusual resource usage",
+      "Scheduled daily cost reconciliation identifying variance > 15%"
+    ],
+    "outcomes": [
+      "Root cause explanation with evidence",
+      "Ranked list of recommended remediation actions with cost-saving estimates",
+      "ServiceNow tickets created and routed for execution",
+      "Validated cost reduction confirmed post-remediation"
+    ]
+  },
+  "actors": [
+    {
+      "id": "actor-finops",
+      "name": "FinOps Team",
+      "role_type": "human",
+      "systems": ["AWS Cost Explorer", "ServiceNow"]
+    },
+    {
+      "id": "actor-platform",
+      "name": "Cloud Platform Engineering",
+      "role_type": "human",
+      "systems": ["AWS", "Azure Monitor", "ServiceNow"]
+    },
+    {
+      "id": "actor-appteam",
+      "name": "Application Teams",
+      "role_type": "human",
+      "systems": ["AWS", "Databricks", "ServiceNow"]
+    },
+    {
+      "id": "actor-observability",
+      "name": "Observability Platform",
+      "role_type": "system",
+      "systems": ["Splunk", "New Relic"]
+    },
+    {
+      "id": "actor-itsm",
+      "name": "ITSM Platform",
+      "role_type": "system",
+      "systems": ["ServiceNow"]
+    },
+    {
+      "id": "actor-ai-agent",
+      "name": "AI Orchestration Agent",
+      "role_type": "agent",
+      "systems": ["Azure AI Foundry"]
+    }
+  ],
+  "steps": [
+    {
+      "id": "step-01",
+      "name": "Detect Cost Anomaly",
+      "description": "Detect unexpected increase in cloud spend via billing thresholds or monitoring signals.",
+      "sequence": 1,
+      "actor_ids": ["actor-observability", "actor-ai-agent"],
+      "system_refs": ["AWS Cost Explorer", "Azure Monitor"],
+      "inputs": ["billing_data", "cost_thresholds"],
+      "outputs": ["anomaly_signal"],
+      "step_type": "task",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 15
+    },
+    {
+      "id": "step-02",
+      "name": "Correlate Infrastructure Changes",
+      "description": "Correlate cost signal with recent infrastructure changes and deployment history.",
+      "sequence": 2,
+      "actor_ids": ["actor-ai-agent"],
+      "system_refs": ["AWS", "Azure Monitor"],
+      "inputs": ["anomaly_signal", "deployment_history", "change_records"],
+      "outputs": ["change_correlation_report"],
+      "step_type": "integration",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 10
+    },
+    {
+      "id": "step-03",
+      "name": "Correlate Observability Data",
+      "description": "Correlate with logs, metrics, and traces from Splunk and New Relic.",
+      "sequence": 3,
+      "actor_ids": ["actor-ai-agent", "actor-observability"],
+      "system_refs": ["Splunk", "New Relic"],
+      "inputs": ["anomaly_signal", "observability_data"],
+      "outputs": ["observability_correlation_report"],
+      "step_type": "integration",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 10
+    },
+    {
+      "id": "step-04",
+      "name": "Identify Top Cost Drivers",
+      "description": "Identify the top cost drivers by service, team, and resource type using ownership metadata.",
+      "sequence": 4,
+      "actor_ids": ["actor-ai-agent"],
+      "system_refs": ["AWS Cost Explorer", "Databricks"],
+      "inputs": ["change_correlation_report", "observability_correlation_report", "tagging_metadata"],
+      "outputs": ["cost_driver_analysis"],
+      "step_type": "task",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 5
+    },
+    {
+      "id": "step-05",
+      "name": "Root Cause Analysis",
+      "description": "Perform AI-assisted root cause analysis combining all correlated signals.",
+      "sequence": 5,
+      "actor_ids": ["actor-ai-agent", "actor-finops"],
+      "system_refs": ["Azure AI Foundry"],
+      "inputs": ["cost_driver_analysis", "change_correlation_report", "observability_correlation_report"],
+      "outputs": ["root_cause_report"],
+      "step_type": "validation",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 20
+    },
+    {
+      "id": "step-06",
+      "name": "Classify Issue Type",
+      "description": "Classify the issue as right-sizing, idle resource, log verbosity, pricing model, or other.",
+      "sequence": 6,
+      "actor_ids": ["actor-ai-agent"],
+      "system_refs": ["Azure AI Foundry"],
+      "inputs": ["root_cause_report"],
+      "outputs": ["issue_classification"],
+      "step_type": "decision",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 5
+    },
+    {
+      "id": "step-07",
+      "name": "Generate Remediation Actions",
+      "description": "Generate recommended remediation actions with cost-saving estimates for each issue.",
+      "sequence": 7,
+      "actor_ids": ["actor-ai-agent"],
+      "system_refs": ["Azure AI Foundry"],
+      "inputs": ["issue_classification", "root_cause_report"],
+      "outputs": ["remediation_actions"],
+      "step_type": "task",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 10
+    },
+    {
+      "id": "step-08",
+      "name": "Rank Actions by Impact and Risk",
+      "description": "Rank remediation actions by cost saving potential and implementation risk.",
+      "sequence": 8,
+      "actor_ids": ["actor-ai-agent"],
+      "system_refs": ["Azure AI Foundry"],
+      "inputs": ["remediation_actions"],
+      "outputs": ["ranked_action_plan"],
+      "step_type": "task",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 5
+    },
+    {
+      "id": "step-09",
+      "name": "Route to Team Owners",
+      "description": "Route ranked actions to responsible team owners based on ownership metadata.",
+      "sequence": 9,
+      "actor_ids": ["actor-ai-agent", "actor-itsm"],
+      "system_refs": ["ServiceNow"],
+      "inputs": ["ranked_action_plan", "ownership_metadata"],
+      "outputs": ["routed_action_assignments"],
+      "step_type": "notification",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 5
+    },
+    {
+      "id": "step-10",
+      "name": "Create ServiceNow Tickets",
+      "description": "Create change tickets in ServiceNow for each approved remediation action.",
+      "sequence": 10,
+      "actor_ids": ["actor-ai-agent", "actor-itsm"],
+      "system_refs": ["ServiceNow"],
+      "inputs": ["routed_action_assignments"],
+      "outputs": ["servicenow_tickets"],
+      "step_type": "integration",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 5
+    },
+    {
+      "id": "step-11",
+      "name": "Request Approvals",
+      "description": "Route approval requests to FinOps, Application Teams, and Platform Engineering as required.",
+      "sequence": 11,
+      "actor_ids": ["actor-finops", "actor-appteam", "actor-platform"],
+      "system_refs": ["ServiceNow"],
+      "inputs": ["servicenow_tickets"],
+      "outputs": ["approval_decisions"],
+      "step_type": "approval",
+      "is_automated": false,
+      "automation_candidate": false,
+      "duration_minutes": 240
+    },
+    {
+      "id": "step-12",
+      "name": "Execute Approved Actions",
+      "description": "Execute approved remediation actions — automated for low-risk, manual for high-risk.",
+      "sequence": 12,
+      "actor_ids": ["actor-ai-agent", "actor-platform", "actor-appteam"],
+      "system_refs": ["AWS", "Databricks", "Splunk", "New Relic"],
+      "inputs": ["approval_decisions", "servicenow_tickets"],
+      "outputs": ["execution_results"],
+      "step_type": "task",
+      "is_automated": false,
+      "automation_candidate": true,
+      "duration_minutes": 60
+    },
+    {
+      "id": "step-13",
+      "name": "Validate Outcomes",
+      "description": "Validate that executed actions achieved expected cost savings within 24–48 hours.",
+      "sequence": 13,
+      "actor_ids": ["actor-ai-agent", "actor-finops"],
+      "system_refs": ["AWS Cost Explorer", "Azure Monitor"],
+      "inputs": ["execution_results", "original_anomaly_signal"],
+      "outputs": ["validation_report"],
+      "step_type": "validation",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 30
+    },
+    {
+      "id": "step-14",
+      "name": "Close Tickets and Update Baseline",
+      "description": "Close ServiceNow tickets and update the cost baseline with validated savings.",
+      "sequence": 14,
+      "actor_ids": ["actor-ai-agent", "actor-itsm", "actor-finops"],
+      "system_refs": ["ServiceNow", "AWS Cost Explorer"],
+      "inputs": ["validation_report"],
+      "outputs": ["closed_tickets", "updated_cost_baseline"],
+      "step_type": "task",
+      "is_automated": true,
+      "automation_candidate": true,
+      "duration_minutes": 10
+    }
+  ],
+  "decisions": [
+    {
+      "id": "dec-01",
+      "name": "Anomaly Confirmed?",
+      "condition": "Anomaly signal exceeds confidence threshold after correlation",
+      "branches": {
+        "yes": "step-04",
+        "no": "close_false_positive"
+      }
+    },
+    {
+      "id": "dec-02",
+      "name": "Action Risk Level",
+      "condition": "Remediation action risk classification",
+      "branches": {
+        "low": "auto_execute",
+        "medium": "approval_required",
+        "high": "manual_execution_required"
+      }
+    }
+  ],
+  "artifacts": [
+    { "id": "art-01", "name": "Anomaly Signal", "artifact_type": "data", "format": "JSON", "owner_step_id": "step-01" },
+    { "id": "art-02", "name": "Root Cause Report", "artifact_type": "report", "format": "JSON", "owner_step_id": "step-05" },
+    { "id": "art-03", "name": "Ranked Action Plan", "artifact_type": "report", "format": "JSON", "owner_step_id": "step-08" },
+    { "id": "art-04", "name": "ServiceNow Tickets", "artifact_type": "ticket", "format": "JSON", "owner_step_id": "step-10" },
+    { "id": "art-05", "name": "Validation Report", "artifact_type": "report", "format": "JSON", "owner_step_id": "step-13" }
+  ],
+  "controls": [
+    {
+      "id": "ctrl-01",
+      "name": "FinOps Approval Gate",
+      "control_type": "approval",
+      "related_step_ids": ["step-11"],
+      "description": "FinOps must approve any action with cost impact > $1,000/month"
+    },
+    {
+      "id": "ctrl-02",
+      "name": "Change Ticket Requirement",
+      "control_type": "compliance",
+      "related_step_ids": ["step-10", "step-12"],
+      "description": "All production infrastructure changes must have an approved ServiceNow change ticket"
+    },
+    {
+      "id": "ctrl-03",
+      "name": "Anomaly Confidence Threshold",
+      "control_type": "threshold",
+      "related_step_ids": ["step-01"],
+      "description": "Anomaly must exceed 85% confidence threshold before triggering remediation workflow"
+    }
+  ],
+  "pain_points": [
+    { "id": "pp-01", "description": "Fragmented tooling across AWS billing, Splunk, New Relic, and ServiceNow", "affected_steps": ["step-02", "step-03"] },
+    { "id": "pp-02", "description": "Slow manual analysis taking hours to days", "affected_steps": ["step-04", "step-05"] },
+    { "id": "pp-03", "description": "Approval bottlenecks slowing execution", "affected_steps": ["step-11"] },
+    { "id": "pp-04", "description": "No closed-loop validation", "affected_steps": ["step-13", "step-14"] }
+  ],
+  "automation_goals": [
+    "Automated closed-loop detect → analyse → act → validate cycle",
+    "AI-driven root cause analysis correlating multiple data sources",
+    "Automated ticket creation and routing in ServiceNow",
+    "Intelligent approval routing based on action risk and cost threshold",
+    "Automated execution of low-risk remediation actions"
+  ],
+  "systems": [
+    { "id": "sys-01", "name": "AWS Cost Explorer", "system_type": "cloud_cost", "vendor": "Amazon Web Services" },
+    { "id": "sys-02", "name": "Databricks", "system_type": "data_platform", "vendor": "Databricks" },
+    { "id": "sys-03", "name": "Splunk", "system_type": "observability", "vendor": "Splunk Inc." },
+    { "id": "sys-04", "name": "New Relic", "system_type": "observability", "vendor": "New Relic Inc." },
+    { "id": "sys-05", "name": "ServiceNow", "system_type": "itsm", "vendor": "ServiceNow" },
+    { "id": "sys-06", "name": "Azure AI Foundry", "system_type": "other", "vendor": "Microsoft" },
+    { "id": "sys-07", "name": "Azure Monitor", "system_type": "observability", "vendor": "Microsoft" }
+  ],
+  "kpis": [
+    { "id": "kpi-01", "name": "Mean Time to Detect", "target": "15", "unit": "minutes" },
+    { "id": "kpi-02", "name": "Mean Time to Remediate (automated)", "target": "4", "unit": "hours" },
+    { "id": "kpi-03", "name": "False Positive Rate", "target": "5", "unit": "percent" },
+    { "id": "kpi-04", "name": "Automated Root Cause Coverage", "target": "80", "unit": "percent" },
+    { "id": "kpi-05", "name": "Monthly Cost Savings", "target": "50000", "unit": "USD" }
+  ]
+}

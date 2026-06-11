@@ -1,0 +1,79 @@
+{
+  "mode": "structured",
+  "industry": "Financial Services (Insurance)",
+  "process_name": "Cloud Cost Anomaly Detection and Remediation",
+  "departments": [
+    "FinOps",
+    "Cloud Platform Engineering",
+    "Application Teams",
+    "Observability (Splunk/New Relic)",
+    "IT Service Management (ServiceNow)"
+  ],
+  "overview": "This process identifies and resolves unexpected increases in cloud spend across hybrid environments (AWS, on-premise, SaaS platforms). It is triggered when a cost anomaly is detected via monitoring or billing data. The process correlates cost signals with infrastructure changes, utilisation metrics, and observability data (logs, metrics, traces) to determine root cause. The system then generates recommended actions to reduce cost and routes these actions to the appropriate teams for approval and execution via ITSM workflows.",
+  "key_steps": [
+    "Detect cost anomaly via billing or monitoring signal",
+    "Correlate cost signal with infrastructure changes and deployment history",
+    "Correlate with observability data (logs, metrics, traces from Splunk/New Relic)",
+    "Identify top cost drivers (service, team, resource type)",
+    "Perform root cause analysis",
+    "Classify issue type (right-sizing, idle resource, verbosity, pricing model)",
+    "Generate recommended remediation actions",
+    "Rank actions by cost saving potential and risk",
+    "Route actions to responsible team owners",
+    "Create ServiceNow tickets for approved actions",
+    "Request approvals from FinOps and Application Teams",
+    "Execute approved remediation actions",
+    "Validate outcomes and cost reduction",
+    "Close tickets and update cost baseline"
+  ],
+  "pain_points": [
+    "Fragmented tooling across AWS billing, Splunk, New Relic, and ServiceNow",
+    "Slow manual analysis taking hours to days to identify root cause",
+    "Poor visibility into which team or application owns anomalous spend",
+    "High observability platform cost driven by excessive log verbosity",
+    "Inconsistent remediation practices across application teams",
+    "Approval bottlenecks slowing execution of time-sensitive optimizations",
+    "No closed-loop validation that remediation actions achieved expected savings"
+  ],
+  "automation_goals": [
+    "Automated closed-loop detect → analyse → act → validate cycle",
+    "AI-driven root cause analysis correlating multiple data sources",
+    "Automated ticket creation and routing in ServiceNow",
+    "Intelligent approval routing based on action risk and cost threshold",
+    "Automated execution of low-risk remediation actions",
+    "Continuous validation and cost baseline updates"
+  ],
+  "systems": [
+    "AWS Cost Explorer / AWS Billing",
+    "Databricks",
+    "Splunk",
+    "New Relic",
+    "ServiceNow",
+    "Azure AI Foundry",
+    "Azure Monitor"
+  ],
+  "approvals": [
+    "FinOps approval required for any action with cost impact > $1,000/month",
+    "Application Team owner approval required before executing changes in their environment",
+    "Cloud Platform Engineering approval required for infrastructure-level changes"
+  ],
+  "risks": [
+    "False positive anomaly detection causing unnecessary remediation",
+    "Automated execution of actions in wrong environment",
+    "Approval delays exceeding SLA for time-sensitive cost spikes",
+    "Insufficient tagging/ownership metadata causing routing failures"
+  ],
+  "constraints": [
+    "Must integrate with existing ServiceNow ITSM workflows",
+    "Cannot modify production infrastructure without approved change ticket",
+    "Must comply with data residency requirements",
+    "Observability data access governed by existing Splunk/New Relic access controls"
+  ],
+  "success_metrics": [
+    "Mean time to detect anomaly < 15 minutes",
+    "Mean time to remediate < 4 hours for automated actions",
+    "Cost anomaly false positive rate < 5%",
+    "Percentage of anomalies with automated root cause identification > 80%",
+    "Monthly cloud cost optimization savings > $50,000"
+  ]
+}

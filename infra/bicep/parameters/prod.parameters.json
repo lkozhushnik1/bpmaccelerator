@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": { "value": "prod" },
+    "location": { "value": "australiaeast" },
+    "baseName": { "value": "bpmacc" },
+    "apiImage": { "value": "YOUR_ACR_NAME.azurecr.io/bpmaccelerator-api:latest" },
+    "webImage": { "value": "YOUR_ACR_NAME.azurecr.io/bpmaccelerator-web:latest" },
+    "deployFoundry": { "value": true }
+  }
+}
