@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://bpmaccelerator/schemas/deployment-manifest.schema.json",
+  "title": "DeploymentManifest",
+  "description": "Azure deployment specification generated from a process and agent plan.",
+  "type": "object",
+  "required": ["process_id", "environment", "resources"],
+  "properties": {
+    "process_id": { "type": "string", "format": "uuid" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "environment": {
+      "type": "string",
+      "enum": ["dev", "staging", "prod"],
+      "default": "dev"
+    },
+    "azure_region": { "type": "string", "default": "australiaeast" },
+    "resource_group": { "type": "string" },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "container_apps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "image"],
+            "properties": {
+              "name": { "type": "string" },
+              "image": { "type": "string" },
+              "cpu": { "type": "number", "default": 0.5 },
+              "memory": { "type": "string", "default": "1Gi" },
+              "env_vars": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              },
+              "ingress": {
+                "type": "object",
+                "properties": {
+                  "external": { "type": "boolean", "default": true },
+                  "target_port": { "type": "integer" }
+                }
+              }
+            }
+          }
+        },
+        "storage_account": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "sku": { "type": "string", "default": "Standard_LRS" },
+            "containers": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "key_vault": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "sku": { "type": "string", "default": "standard" }
+          }
+        },
+        "log_analytics": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "retention_days": { "type": "integer", "default": 30 }
+          }
+        },
+        "application_insights": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" }
+          }
+        },
+        "managed_identity": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" }
+          }
+        },
+        "ai_foundry": {
+          "type": "object",
+          "description": "Azure AI Foundry workspace reference (Phase 2).",
+          "properties": {
+            "workspace_name": { "type": "string" },
+            "model_deployments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "model": { "type": "string" },
+                  "capacity": { "type": "integer" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://bpmaccelerator/schemas/normalized-process.schema.json",
+  "title": "NormalizedProcess",
+  "description": "Canonical intermediate process model produced from any intake format.",
+  "type": "object",
+  "required": ["id", "metadata", "overview", "actors", "steps"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "metadata": {
+      "type": "object",
+      "required": ["name", "created_at"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string", "default": "1.0.0" },
+        "industry": { "type": "string" },
+        "departments": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "created_at": { "type": "string", "format": "date-time" },
+        "tags": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "overview": {
+      "type": "object",
+      "required": ["description"],
+      "properties": {
+        "description": { "type": "string" },
+        "objectives": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "triggers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "outcomes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "actors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "role_type"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "role_type": {
+            "type": "string",
+            "enum": ["human", "system", "agent", "external"]
+          },
+          "systems": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "sequence", "step_type"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "sequence": { "type": "integer", "minimum": 1 },
+          "actor_ids": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "system_refs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "inputs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "outputs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "step_type": {
+            "type": "string",
+            "enum": ["task", "decision", "approval", "notification", "integration", "validation", "start", "end"]
+          },
+          "is_automated": { "type": "boolean", "default": false },
+          "automation_candidate": { "type": "boolean", "default": false },
+          "duration_minutes": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "condition"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "condition": { "type": "string" },
+          "branches": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "artifact_type"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "artifact_type": {
+            "type": "string",
+            "enum": ["input", "output", "report", "ticket", "approval", "notification", "data"]
+          },
+          "format": { "type": "string" },
+          "owner_step_id": { "type": "string" }
+        }
+      }
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "control_type"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "control_type": {
+            "type": "string",
+            "enum": ["approval", "compliance", "risk", "audit", "sla", "threshold"]
+          },
+          "related_step_ids": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "pain_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description"],
+        "properties": {
+          "id": { "type": "string" },
+          "description": { "type": "string" },
+          "affected_steps": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "automation_goals": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "systems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "system_type": {
+            "type": "string",
+            "enum": ["itsm", "observability", "cloud_cost", "erp", "crm", "document", "communication", "data_platform", "other"]
+          },
+          "vendor": { "type": "string" }
+        }
+      }
+    },
+    "kpis": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "target": { "type": "string" },
+          "unit": { "type": "string" }
+        }
+      }
+    }
+  }
+}

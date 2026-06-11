@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://bpmaccelerator/schemas/agent-plan.schema.json",
+  "title": "AgentPlan",
+  "description": "Azure AI Foundry multi-agent orchestration plan derived from a normalized process.",
+  "type": "object",
+  "required": ["process_id", "orchestration_pattern", "agents"],
+  "properties": {
+    "process_id": { "type": "string", "format": "uuid" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "orchestration_pattern": {
+      "type": "string",
+      "enum": ["planner_specialists_validator", "sequential", "parallel", "hierarchical"],
+      "description": "Top-level orchestration topology for the agent network."
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "role", "trigger"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "role": {
+            "type": "string",
+            "enum": ["planner", "specialist", "validator", "human_proxy"]
+          },
+          "description": { "type": "string" },
+          "trigger": { "type": "string", "description": "What initiates this agent." },
+          "inputs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "outputs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "tool_type"],
+              "properties": {
+                "name": { "type": "string" },
+                "tool_type": {
+                  "type": "string",
+                  "enum": ["api_connector", "document_processor", "search", "code_interpreter", "custom", "human_approval"]
+                },
+                "description": { "type": "string" },
+                "config": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "human_in_loop": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this agent requires human approval before proceeding."
+          },
+          "related_step_ids": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "foundry_config": {
+            "type": "object",
+            "description": "Azure AI Foundry-specific configuration (Phase 2).",
+            "properties": {
+              "model_deployment": { "type": "string" },
+              "temperature": { "type": "number", "minimum": 0, "maximum": 2 },
+              "max_tokens": { "type": "integer", "minimum": 1 }
+            }
+          }
+        }
+      }
+    },
+    "human_checkpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "after_agent_id"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "after_agent_id": { "type": "string" }
+        }
+      }
+    },
+    "data_flow": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from_agent", "to_agent", "artifact"],
+        "properties": {
+          "from_agent": { "type": "string" },
+          "to_agent": { "type": "string" },
+          "artifact": { "type": "string" }
+        }
+      }
+    }
+  }
+}

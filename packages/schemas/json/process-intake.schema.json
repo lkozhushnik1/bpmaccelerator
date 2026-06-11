@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://bpmaccelerator/schemas/process-intake.schema.json",
+  "title": "ProcessIntake",
+  "description": "Intake payload for the BPM Accelerator — accepts either freeform prompt or structured BYOP fields.",
+  "type": "object",
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": ["freeform", "structured"],
+      "description": "Intake mode: freeform prompt or structured BYOP fields."
+    },
+    "prompt": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Freeform natural-language description of the business process (required when mode=freeform)."
+    },
+    "industry": {
+      "type": "string",
+      "description": "Industry or sector, e.g. 'Financial Services', 'Healthcare'."
+    },
+    "process_name": {
+      "type": "string",
+      "description": "Short descriptive name for the process."
+    },
+    "departments": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Departments or functions involved."
+    },
+    "overview": {
+      "type": "string",
+      "description": "2–5 sentence description of the process."
+    },
+    "key_steps": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Ordered list of major process steps."
+    },
+    "pain_points": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Current problems and inefficiencies."
+    },
+    "automation_goals": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Desired automation outcomes."
+    },
+    "systems": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tools, platforms, and systems involved."
+    },
+    "approvals": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Approval steps, owners, and conditions."
+    },
+    "risks": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Known risks and exception paths."
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Regulatory, technical, or organizational constraints."
+    },
+    "success_metrics": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "KPIs and success criteria."
+    }
+  },
+  "required": ["mode"],
+  "allOf": [
+    {
+      "if": { "properties": { "mode": { "const": "freeform" } } },
+      "then": { "required": ["prompt"] }
+    },
+    {
+      "if": { "properties": { "mode": { "const": "structured" } } },
+      "then": { "required": ["process_name", "overview"] }
+    }
+  ]
+}

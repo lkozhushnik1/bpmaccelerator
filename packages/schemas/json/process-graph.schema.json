@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://bpmaccelerator/schemas/process-graph.schema.json",
+  "title": "ProcessGraph",
+  "description": "Directed graph representation of a normalized process, suitable for rendering and editing in a UI.",
+  "type": "object",
+  "required": ["process_id", "nodes", "edges"],
+  "properties": {
+    "process_id": { "type": "string", "format": "uuid" },
+    "schema_version": { "type": "string", "default": "1.0.0" },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "node_type"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "description": { "type": "string" },
+          "node_type": {
+            "type": "string",
+            "enum": ["start", "end", "task", "decision", "approval", "integration", "notification", "validation"]
+          },
+          "actor_ids": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "system_refs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "is_automated": { "type": "boolean" },
+          "automation_candidate": { "type": "boolean" },
+          "position": {
+            "type": "object",
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "source", "target"],
+        "properties": {
+          "id": { "type": "string" },
+          "source": { "type": "string" },
+          "target": { "type": "string" },
+          "label": { "type": "string" },
+          "edge_type": {
+            "type": "string",
+            "enum": ["sequence", "conditional", "exception", "parallel"],
+            "default": "sequence"
+          },
+          "condition": { "type": "string" }
+        }
+      }
+    },
+    "swimlanes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "node_ids"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "node_ids": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
