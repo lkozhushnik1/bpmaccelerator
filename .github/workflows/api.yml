@@ -16,6 +16,8 @@ jobs:
   test:
     name: Test & lint
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: apps/api

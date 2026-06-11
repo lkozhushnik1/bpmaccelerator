@@ -1,7 +1,5 @@
 """Graph builder — converts a NormalizedProcess into a ProcessGraph."""
 
-import math
-
 from app.models.normalized_process import NormalizedProcess, RoleType, StepType
 from app.models.process_graph import (
     EdgeType,
