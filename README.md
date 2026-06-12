@@ -38,13 +38,35 @@ bpmaccelerator/
 
 ## Quick start
 
-### Prerequisites
+### Frontend-only (demo mode) — no backend needed
 
-- Node.js 20+
-- Python 3.11+
-- Docker (optional, for containerized run)
+This is the fastest way to explore the UI:
 
-### 1. Backend (FastAPI)
+```bash
+cd apps/web
+npm install
+npm run dev:demo
+```
+
+Open `http://localhost:3000` — the app loads pre-built fixture data (the Cloud
+Cost Anomaly Detection golden example) without calling the API. A banner at the
+top of every page confirms demo mode is active.
+
+To enable demo mode manually (e.g. from a `.env.local` file):
+
+```bash
+cp apps/web/.env.local.example apps/web/.env.local
+# .env.local already has NEXT_PUBLIC_DEMO_MODE=true
+cd apps/web && npm run dev
+```
+
+---
+
+### Full stack (frontend + backend)
+
+**Prerequisites:** Node.js 20+, Python 3.11+
+
+#### 1. Backend (FastAPI)
 
 ```bash
 cd apps/api
@@ -57,7 +79,7 @@ uvicorn app.main:app --reload --port 8000
 API is now available at `http://localhost:8000`.  
 Interactive docs: `http://localhost:8000/docs`
 
-### 2. Frontend (Next.js)
+#### 2. Frontend (Next.js)
 
 ```bash
 cd apps/web

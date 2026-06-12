@@ -1,4 +1,13 @@
+import { DEMO_PIPELINE_RESULT } from './mock-data'
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
+/**
+ * When NEXT_PUBLIC_DEMO_MODE=true the app returns pre-built fixture data
+ * instead of calling the backend. This lets you explore the full UI without
+ * needing a running API server.
+ */
+const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === 'true'
 
 export interface ProcessIntake {
   mode: 'freeform' | 'structured'
@@ -25,6 +34,12 @@ export interface PipelineResult {
 }
 
 export async function runPipeline(intake: ProcessIntake): Promise<PipelineResult> {
+  if (DEMO_MODE) {
+    // Simulate a short network delay so the loading state is visible
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    return DEMO_PIPELINE_RESULT as PipelineResult
+  }
+
   const res = await fetch(`${API_URL}/api/process/pipeline`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -40,6 +55,11 @@ export async function runPipeline(intake: ProcessIntake): Promise<PipelineResult
 export async function normalizeProcess(
   intake: ProcessIntake,
 ): Promise<Record<string, unknown>> {
+  if (DEMO_MODE) {
+    await new Promise((resolve) => setTimeout(resolve, 400))
+    return DEMO_PIPELINE_RESULT.normalized_process as Record<string, unknown>
+  }
+
   const res = await fetch(`${API_URL}/api/process/normalize`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { NavBar } from '@/components/ui/NavBar'
+import { DemoBanner } from '@/components/ui/DemoBanner'
 
 export const metadata: Metadata = {
   title: 'BPM Accelerator',
@@ -16,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-sans bg-gray-50 min-h-screen antialiased">
+        <DemoBanner />
         <NavBar />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {children}
